@@ -1,0 +1,69 @@
+.authContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #dcfce7 0%, #a7f3d0 100%);
+  font-family: sans-serif;
+}
+
+.authCard {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.authCard h2 {
+  color: #064e3b;
+  margin-bottom: 0.5rem;
+}
+
+.inputGroup {
+  margin-bottom: 1rem;
+  text-align: left;
+  position: relative;
+}
+
+.inputGroup label {
+  font-size: 0.85rem;
+  color: #065f46;
+  font-weight: 600;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.3rem;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.togglePassword {
+  position: absolute;
+  right: 10px;
+  top: 38px;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.authButton {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #059669;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.authButton:hover {
+  background-color: #047857;
+}

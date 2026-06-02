@@ -1,0 +1,33 @@
+.modalOverlay {
+  position: fixed; 
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent { 
+  background: white; 
+  padding: 2rem; 
+  border-radius: 20px; 
+  width: 400px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 1rem; 
+}
+
+.typeToggle { display: flex; gap: 10px; }
+
+.activeExpense { background: #fee2e2; color: #b91c1c; border: 1px solid #ef4444; }
+.activeIncome { background: #dcfce7; color: #065f46; border: 1px solid #10b981; }
+
+.saveBtn { 
+  background: #10b981; 
+  color: white; 
+  border: none; 
+  padding: 10px; 
+  border-radius: 8px; 
+  cursor: pointer; 
+}

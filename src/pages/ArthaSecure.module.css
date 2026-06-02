@@ -1,0 +1,16 @@
+.secureContainer { padding: 2rem; transition: background 0.3s; }
+.sectionCard { 
+  background: white; padding: 1.5rem; border-radius: 20px; 
+  margin-bottom: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+}
+.sectionCard input { 
+  display: block; width: 100%; margin: 10px 0; padding: 12px; 
+  border: 1px solid #e2e8f0; border-radius: 10px; 
+}
+.btnPrimary { background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; }
+.btnLogout { background: #fee2e2; color: #ef4444; border: none; padding: 10px 20px; border-radius: 10px; margin-top: 10px; }
+.toggleRow { display: flex; justify-content: space-between; align-items: center; }
+
+/* Mode Gelap Sederhana */
+.dark { background: #1a202c; color: white; }
+.dark .sectionCard { background: #2d3748; color: white; }

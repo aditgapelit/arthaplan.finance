@@ -1,0 +1,94 @@
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  border-right: 1px solid #e2e8f0;
+  box-sizing: border-box;
+  z-index: 10; /* Memastikan sidebar selalu di atas */
+}
+
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  background-color: #10b981;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  flex-shrink: 0; /* Mencegah ikon gepeng */
+}
+
+.brandName { font-size: 1.1rem; color: #064e3b; margin: 0; font-weight: 700; }
+.brandTag { font-size: 0.65rem; color: #10b981; font-weight: 700; margin: 0; letter-spacing: 0.5px; text-transform: uppercase; }
+
+.nav { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; overflow-y: auto; }
+
+.nav button {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  width: 100%; /* Memastikan tombol full width */
+}
+
+.nav button:hover { background-color: #f9fafb; }
+
+.nav button.active { background-color: #f0fdf4; color: #10b981; }
+
+.nav button.active::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background-color: #10b981;
+  border-radius: 50%;
+  margin-left: auto;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid #f3f4f6;
+  margin-top: auto; /* Mendorong ke bawah */
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #10b981;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.userName { font-weight: 600; margin: 0; font-size: 0.85rem; color: #111827; }
+.userEmail { font-size: 0.75rem; color: #6b7280; margin: 0; }
