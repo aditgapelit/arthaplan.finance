@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import * as tf from '@tensorflow/tfjs'; 
 import { Wallet, TrendingUp, TrendingDown, Target, Sparkles } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import { useBalance } from '../hooks/useBalance';
 import styles from './Dashboard.module.css';
+
+const AI_API_BASE_URL = import.meta.env.VITE_AI_API_URL || 'http://localhost:8000';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -13,26 +14,61 @@ export default function Dashboard() {
   const [stats, setStats] = useState({ income: 0, expense: 0, activeGoals: 0, userName: '' });
   const [aiMessages, setAiMessages] = useState(["Menganalisis keuangan Anda..."]);
 
-  const getAiPrediction = (expenses) => {
-    if (expenses.length < 3) return null;
+  const generateFallbackInsight = (inc, exp, activeGoals, totalGoals, prediction) => {
+    const messages = [];
+    const ratio = inc > 0 ? exp / inc : 0;
+
+    if (prediction && prediction > inc) {
+      messages.push(`AI memprediksi pengeluaran bulan depan tinggi: Rp ${Math.round(prediction).toLocaleString('id-ID')}.`);
+    }
+
+    if (totalGoals === 0) {
+      messages.push("Kamu belum punya target keuangan. Mulai buat satu!");
+    } else if (activeGoals === 0) {
+      messages.push("Semua target keuanganmu sudah tercapai!");
+    } else {
+      messages.push(`Kamu sedang mengejar ${activeGoals} target keuangan.`);
+    }
+
+    if (inc > 0) {
+      if (ratio > 0.8) {
+        messages.push("Pengeluaranmu cukup tinggi (Boros).");
+      } else if (ratio < 0.4) {
+        messages.push("Pengeluaranmu sangat hemat!");
+      } else {
+        messages.push("Pengeluaranmu dalam kondisi stabil.");
+      }
+    }
+
+    setAiMessages(messages);
+  };
+
+  const fetchAiInsights = async (inc, exp, activeGoalsCount, totalGoalsCount) => {
+    const expenseHistory = [exp * 0.8, exp * 0.9, exp];
+
     try {
-      const xs = tf.tensor1d([1, 2, 3]); 
-      const ys = tf.tensor1d(expenses.slice(-3)); 
-      const model = tf.sequential();
-      model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
-      model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
-      model.fitSync(xs, ys, { epochs: 100, verbose: 0 });
-      const prediction = model.predict(tf.tensor2d([4], [1, 1]));
-      const result = prediction.dataSync()[0];
-      
-      xs.dispose();
-      ys.dispose();
-      prediction.dispose();
-      model.dispose();
-      
-      return result;
-    } catch (e) {
-      return null;
+      const response = await fetch(`${AI_API_BASE_URL}/api/ai/dashboard`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          income: inc,
+          expense: exp,
+          active_goals: activeGoalsCount,
+          total_goals: totalGoalsCount,
+          expense_history: expenseHistory,
+        }),
+      });
+
+      if (!response.ok) throw new Error('AI API failed');
+
+      const data = await response.json();
+      setAiMessages(Array.isArray(data.insights) && data.insights.length > 0 ? data.insights : ["Menganalisis keuangan Anda..."]);
+      return;
+    } catch (error) {
+      const fallbackPrediction = expenseHistory.length >= 3 ? expenseHistory[expenseHistory.length - 1] : null;
+      generateFallbackInsight(inc, exp, activeGoalsCount, totalGoalsCount, fallbackPrediction);
     }
   };
 
@@ -62,44 +98,13 @@ export default function Dashboard() {
       const activeGoalsCount = goals.filter(g => Number(g.saved_amount) < Number(g.target_amount)).length;
 
       setStats({ income: inc, expense: exp, activeGoals: activeGoalsCount, userName: formattedName });
-      const prediction = getAiPrediction([exp * 0.8, exp * 0.9, exp]); 
-      
-      generateInsight(inc, exp, activeGoalsCount, totalGoalsCount, prediction);
+      await fetchAiInsights(inc, exp, activeGoalsCount, totalGoalsCount);
     }
     fetchDashboardData();
     return () => {
       active = false;
     };
   }, [user]);
-
-  const generateInsight = (inc, exp, activeGoals, totalGoals, prediction) => {
-    let messages = [];
-    const ratio = inc > 0 ? (exp / inc) : 0;
-
-    if (prediction && prediction > inc) {
-      messages.push(`AI memprediksi pengeluaran bulan depan tinggi: Rp ${Math.round(prediction).toLocaleString('id-ID')}.`);
-    }
-
-    if (totalGoals === 0) {
-      messages.push("Kamu belum punya target keuangan. Mulai buat satu!");
-    } else if (activeGoals === 0 && totalGoals > 0) {
-      messages.push("Semua target keuanganmu sudah tercapai!");
-    } else {
-      messages.push(`Kamu sedang mengejar ${activeGoals} target keuangan.`);
-    }
-
-    if (inc > 0) {
-      if (ratio > 0.8) {
-        messages.push("Pengeluaranmu cukup tinggi (Boros).");
-      } else if (ratio < 0.4) {
-        messages.push("Pengeluaranmu sangat hemat!");
-      } else {
-        messages.push("Pengeluaranmu dalam kondisi stabil.");
-      }
-    }
-
-    setAiMessages(messages);
-  };
 
   const cardVariants = {
     initial: { opacity: 0, y: 20 },

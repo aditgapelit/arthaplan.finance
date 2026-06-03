@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import Button from './Button';
 
-export default function Navbar({ onLoginClick }) {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -41,7 +41,7 @@ export default function Navbar({ onLoginClick }) {
               Login
             </Button>
           </Link>
-          <Link to="/login">
+          <Link to="/register">
             <Button variant="primary" size="sm">
               Sign Up
             </Button>
