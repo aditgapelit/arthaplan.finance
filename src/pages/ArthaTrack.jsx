@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import * as tf from '@tensorflow/tfjs';
 import { Plus, Sparkles, TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import styles from './ArthaTrack.module.css';
 import AddTransactionModal from '../components/AddTransactionModal';
+
+const AI_API_BASE_URL = import.meta.env.VITE_AI_API_URL || 'http://localhost:8000';
 
 export default function ArthaTrack() {
   const { user } = useAuth();
@@ -32,18 +33,24 @@ export default function ArthaTrack() {
     }, { income: 0, expense: 0 });
   }, [transactions]);
 
-  const predictCategoryTrend = async (history) => {
-    if (history.length < 3) return null;
-    const xs = tf.tensor1d([1, 2, 3]);
-    const ys = tf.tensor1d(history.slice(-3));
-    const model = tf.sequential();
-    model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
-    model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
-    await model.fit(xs, ys, { epochs: 100, verbose: 0 });
-    const prediction = model.predict(tf.tensor2d([4], [1, 1]));
-    const val = prediction.dataSync()[0];
-    xs.dispose(); ys.dispose(); model.dispose(); prediction.dispose();
-    return val;
+  const buildFallbackInsights = async (expenseStatsMap) => {
+    const insights = [];
+    const categories = Object.keys(expenseStatsMap);
+
+    if (categories.length > 0) {
+      const top = categories.reduce((a, b) => expenseStatsMap[a] > expenseStatsMap[b] ? a : b);
+      const topAmount = expenseStatsMap[top];
+
+      insights.push(`${top} menjadi pengeluaran terbesar (Rp ${topAmount.toLocaleString('id-ID')}).`);
+
+      if (topAmount > 0) {
+        insights.push(`Tren pengeluaran pada ${top} saat ini relatif stabil.`);
+      }
+    } else {
+      insights.push("Mulai catat pengeluaran agar AI Learning bisa menganalisis pola belanjamu.");
+    }
+
+    setAiInsights(insights);
   };
 
   async function fetchTransactions() {
@@ -60,26 +67,37 @@ export default function ArthaTrack() {
 
   useEffect(() => {
     async function runAiAnalysis() {
-      const insights = [];
       const categories = Object.keys(expenseStats);
       
       if (categories.length > 0) {
         const top = categories.reduce((a, b) => expenseStats[a] > expenseStats[b] ? a : b);
         const topAmount = expenseStats[top];
-        
-        insights.push(`${top} menjadi pengeluaran terbesar (Rp ${topAmount.toLocaleString('id-ID')}).`);
 
-        const trend = await predictCategoryTrend([topAmount * 0.7, topAmount * 0.85, topAmount]);
-        
-        if (trend && trend > topAmount * 1.1) {
-          insights.push(`AI Learning mendeteksi tren kenaikan pengeluaran pada ${top}.`);
-        } else {
-          insights.push(`Tren pengeluaran pada ${top} saat ini relatif stabil.`);
+        try {
+          const response = await fetch(`${AI_API_BASE_URL}/api/ai/track`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              category_name: top,
+              category_history: [topAmount * 0.7, topAmount * 0.85, topAmount],
+            }),
+          });
+
+          if (!response.ok) throw new Error('AI API failed');
+
+          const data = await response.json();
+          setAiInsights([
+            `${top} menjadi pengeluaran terbesar (Rp ${topAmount.toLocaleString('id-ID')}).`,
+            data.message || `Tren pengeluaran pada ${top} saat ini relatif stabil.`,
+          ]);
+        } catch (error) {
+          await buildFallbackInsights(expenseStats);
         }
       } else {
-        insights.push("Mulai catat pengeluaran agar AI Learning bisa menganalisis pola belanjamu.");
+        await buildFallbackInsights(expenseStats);
       }
-      setAiInsights(insights);
     }
     runAiAnalysis();
   }, [expenseStats]);

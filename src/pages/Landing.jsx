@@ -97,7 +97,7 @@ export default function Landing() {
       <div className={styles.bgGlowCyan}></div>
       <div className={styles.bgGrid}></div>
 
-      <Navbar onLoginClick={() => navigate('/login')} />
+      <Navbar />
 
       {/* Hero Section */}
       <section className={styles.heroSection}>
