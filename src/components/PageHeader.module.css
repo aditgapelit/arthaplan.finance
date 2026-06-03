@@ -1,0 +1,16 @@
+.commandHeader {
+  border-radius: 16px;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 1;
+}
+.commandTop { background: #059669; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.commandGreeting { min-width: 0; }
+.commandLabel { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.6); letter-spacing: 0.07em; display: block; margin-bottom: 6px; }
+.commandGreeting h1 { font-size: 1.5rem; font-weight: 800; color: white; margin: 0; letter-spacing: -0.025em; line-height: 1.2; }
+.commandSubtitle { margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 0.95rem; line-height: 1.5; }
+.commandAvatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: white; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.3); }
+.statsStrip { background: white; padding: 14px 24px; display: flex; align-items: center; }
+@media (max-width: 640px) { .commandTop { padding: 16px; } .commandGreeting h1 { font-size: 1.2rem; } .statsStrip { padding: 12px 16px; flex-wrap: wrap; gap: 12px; } }

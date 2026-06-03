@@ -4,6 +4,7 @@ import { Target, Wallet, Plus, Calendar } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import { useBalance } from '../hooks/useBalance';
+import PageHeader from '../components/PageHeader';
 import AddGoalModal from '../components/AddGoalModal';
 import DepositGoalModal from '../components/DepositGoalModal';
 import styles from './ArthaGoal.module.css';
@@ -86,19 +87,16 @@ export default function ArthaGoal() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={styles.goalContainer}
     >
-      {/* Premium Glassmorphism Header Card */}
-      <motion.header 
-        className={styles.premiumHeader}
-        initial={{ opacity: 0, x: -20 }} 
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <h1>ArthaGoal</h1>
-        <p className={styles.headerSubtitle}>
-          <Wallet size={18} strokeWidth={1.5} color="#059669" />
-          Saldo Tersedia: <strong>Rp {totalSaldo.toLocaleString('id-ID')}</strong>
-        </p>
-      </motion.header>
+      <PageHeader
+        label="ARTHAGOAL"
+        title="ArthaGoal"
+        subtitle={
+          <span className={styles.headerSubtitle}>
+            <Wallet size={18} strokeWidth={1.5} color="#ffffff" />
+            Saldo Tersedia: <strong>Rp {totalSaldo.toLocaleString('id-ID')}</strong>
+          </span>
+        }
+      />
 
       <div className={styles.summaryGrid}>
         <motion.div 

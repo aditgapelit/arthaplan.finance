@@ -5,6 +5,7 @@ import { Wallet, TrendingUp, TrendingDown, Target, Sparkles } from 'lucide-react
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import { useBalance } from '../hooks/useBalance';
+import PageHeader from '../components/PageHeader';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
@@ -118,16 +119,26 @@ export default function Dashboard() {
       transition={{ duration: 0.5, ease: "easeOut" }} 
       className={styles.container}
     >
-      {/* Premium Glassmorphism Header Card */}
-      <motion.header 
-        className={styles.premiumHeader}
-        initial={{ opacity: 0, x: -20 }} 
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+      <PageHeader
+        label="DASHBOARD"
+        title={`Selamat datang, ${stats.userName || 'Pengguna'}!`}
+        avatar={(stats.userName || 'P').charAt(0).toUpperCase()}
       >
-        <h1>Dashboard</h1>
-        <p>Selamat datang kembali, {stats.userName}!</p>
-      </motion.header>
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>SALDO</span>
+          <span className={styles.statValue}>Rp {balance.toLocaleString('id-ID')}</span>
+        </div>
+        <div className={styles.statDivider} />
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>PEMASUKAN</span>
+          <span className={`${styles.statValue} ${styles.statIncome}`}>Rp {stats.income.toLocaleString('id-ID')}</span>
+        </div>
+        <div className={styles.statDivider} />
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>PENGELUARAN</span>
+          <span className={`${styles.statValue} ${styles.statExpense}`}>Rp {stats.expense.toLocaleString('id-ID')}</span>
+        </div>
+      </PageHeader>
       
       <motion.div 
         variants={cardVariants}

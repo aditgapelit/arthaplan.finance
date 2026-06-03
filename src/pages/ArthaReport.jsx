@@ -4,6 +4,7 @@ import { BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
+import PageHeader from '../components/PageHeader';
 import styles from './ArthaReport.module.css';
 
 export default function ArthaReport() {
@@ -71,16 +72,11 @@ export default function ArthaReport() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={styles.reportContainer}
     >
-      {/* Premium Glassmorphism Header Card */}
-      <motion.header 
-        className={styles.premiumHeader}
-        initial={{ opacity: 0, x: -20 }} 
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <h1>ArthaReport</h1>
-        <p>Analisis kondisi keuanganmu</p>
-      </motion.header>
+      <PageHeader
+        label="ARTHAREPORT"
+        title="ArthaReport"
+        subtitle="Analisis kondisi keuanganmu"
+      />
 
       <motion.div 
         variants={cardVariants}

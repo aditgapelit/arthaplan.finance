@@ -80,7 +80,7 @@
   justify-content: center;
   border-radius: 50%;
   margin-bottom: 16px;
-  box-shadow: 0 20px 40px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.26);
   font-weight: 700;
 }
 
@@ -112,17 +112,55 @@
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+.profileStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.statChip {
+  background: linear-gradient(180deg, #ffffff, #f0fdf4);
+  border: 1px solid rgba(16, 185, 129, 0.16);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.06);
+}
+
+.statChipLabel {
+  color: #64748b;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.statChip strong {
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Info Group */
 .infoGroup {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .infoItem {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid rgba(16, 185, 129, 0.12);
 }
 
 .infoLabel {
@@ -132,19 +170,21 @@
 }
 
 .label {
-  color: #94a3b8;
+  color: #64748b;
   margin: 0;
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
 .value {
   font-weight: 600;
   margin: 0;
   font-size: 1.1rem;
-  color: #ffffff;
+  color: #0f172a;
   letter-spacing: -0.02em;
+  word-break: break-word;
 }
 
 /* Section Header */
@@ -157,10 +197,17 @@
 
 .sectionHeader h3 {
   margin: 0;
-  color: #ffffff;
+  color: #0f172a;
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+.sectionDescription {
+  margin: -8px 0 18px;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 /* Form Keamanan */
@@ -185,13 +232,13 @@
 .input {
   width: 100%;
   padding: 14px 14px 14px 48px;
-  border: 1px solid rgba(236, 72, 153, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.18);
   border-radius: 16px;
   font-size: 1rem;
   box-sizing: border-box;
   transition: all 0.2s;
-  background-color: rgba(15, 23, 42, 0.5);
-  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #0f172a;
 }
 
 .input::placeholder {
@@ -202,7 +249,7 @@
   outline: none;
   border-color: #059669;
   box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: #ffffff;
 }
 
 .btnPrimary {
@@ -267,6 +314,10 @@
   
   .profileName {
     font-size: 1.2rem;
+  }
+
+  .profileStats {
+    grid-template-columns: 1fr;
   }
   
   .input {

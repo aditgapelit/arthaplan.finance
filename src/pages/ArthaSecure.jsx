@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Lock, Sun, Moon, Monitor, LogOut } from 'lucide-react';
+import PageHeader from '../components/PageHeader';
 import styles from './ArthaSecure.module.css';
 
 export default function ArthaSecure() {
@@ -27,15 +28,11 @@ export default function ArthaSecure() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={styles.secureContainer}
     >
-      <motion.header 
-        className={styles.premiumHeader}
-        initial={{ opacity: 0, x: -20 }} 
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <h1>ArthaSecure</h1>
-        <p>Keamanan akunmu terjaga</p>
-      </motion.header>
+      <PageHeader
+        label="ARTHASECURE"
+        title="ArthaSecure"
+        subtitle="Keamanan akunmu terjaga"
+      />
 
       <motion.div 
         variants={cardVariants}

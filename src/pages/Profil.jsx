@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Calendar, Lock, Save } from 'lucide-react';
 import { supabase } from '../supabase/client';
+import PageHeader from '../components/PageHeader';
 import styles from './Profil.module.css';
 
 export default function Profil() {
@@ -70,16 +71,11 @@ export default function Profil() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={styles.profilContainer}
     >
-      {/* Premium Glassmorphism Header Card */}
-      <motion.header 
-        className={styles.premiumHeader}
-        initial={{ opacity: 0, x: -20 }} 
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <h1>Profil & Keamanan</h1>
-        <p>Kelola identitas dan keamanan akun Anda</p>
-      </motion.header>
+      <PageHeader
+        label="PROFIL"
+        title="Profil & Keamanan"
+        subtitle="Kelola identitas dan keamanan akun Anda"
+      />
 
       <motion.div 
         variants={cardVariants}
@@ -98,6 +94,21 @@ export default function Profil() {
             Member sejak {user.memberSince}
           </span>
         </div>
+        <div className={styles.profileStats}>
+          <div className={styles.statChip}>
+            <span className={styles.statChipLabel}>Nama</span>
+            <strong>{user.name}</strong>
+          </div>
+          <div className={styles.statChip}>
+            <span className={styles.statChipLabel}>Email</span>
+            <strong>{user.email}</strong>
+          </div>
+          <div className={styles.statChip}>
+            <span className={styles.statChipLabel}>Member</span>
+            <strong>{user.memberSince}</strong>
+          </div>
+        </div>
+
         <div className={styles.infoGroup}>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>
@@ -128,6 +139,9 @@ export default function Profil() {
           <Lock size={20} strokeWidth={1.5} color="#059669" />
           <h3>Ubah Password</h3>
         </div>
+        <p className={styles.sectionDescription}>
+          Gunakan password yang kuat dan unik untuk menjaga akun tetap aman.
+        </p>
         <div className={styles.secureForm}>
           <div className={styles.inputWrapper}>
             <Lock size={18} strokeWidth={1.5} color="#64748b" className={styles.inputIcon} />

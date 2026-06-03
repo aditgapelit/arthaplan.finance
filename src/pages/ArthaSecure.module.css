@@ -107,7 +107,7 @@
   display: block;
   width: 100%;
   padding: 14px 14px 14px 48px;
-  border: 1px solid rgba(236, 72, 153, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.18);
   border-radius: 16px;
   background-color: rgba(15, 23, 42, 0.5);
   color: #ffffff;
@@ -122,8 +122,8 @@
 
 .sectionCard input:focus {
   outline: none;
-  border-color: #ec4899;
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
   background-color: rgba(15, 23, 42, 0.7);
 }
 

@@ -4,6 +4,7 @@ import * as tf from '@tensorflow/tfjs';
 import { Plus, Sparkles, TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
+import PageHeader from '../components/PageHeader';
 import styles from './ArthaTrack.module.css';
 import AddTransactionModal from '../components/AddTransactionModal';
 
@@ -102,16 +103,11 @@ export default function ArthaTrack() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={styles.trackContainer}
     >
-      {/* Premium Glassmorphism Header Card */}
-      <motion.header 
-        className={styles.premiumHeader}
-        initial={{ opacity: 0, x: -20 }} 
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <h1>ArthaTrack</h1>
-        <p>Lacak dan kelola transaksi keuanganmu</p>
-      </motion.header>
+      <PageHeader
+        label="ARTHATRACK"
+        title="ArthaTrack"
+        subtitle="Lacak dan kelola transaksi keuanganmu"
+      />
 
       <motion.div 
         variants={cardVariants}

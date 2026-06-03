@@ -25,8 +25,8 @@ export default function DepositGoalModal({ goal, isOpen, onClose, onSave }) {
       <motion.div 
         className={styles.modalOverlay}
         style={{
-          background: 'rgba(0, 0, 0, 0.7)',
-          backdropFilter: 'blur(8px)'
+          background: 'rgba(255, 255, 255, 0.10)',
+          backdropFilter: 'blur(14px)'
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
