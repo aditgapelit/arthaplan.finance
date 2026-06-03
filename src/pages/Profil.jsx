@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { User, Mail, Calendar, Lock, Save } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import styles from './Profil.module.css';
 
 export default function Profil() {
   const [user, setUser] = useState({ name: "Loading...", email: "Loading...", memberSince: "-" });
   const [loading, setLoading] = useState(true);
-  
-  // State untuk form password
   const [passwords, setPasswords] = useState({ current: '', new: '', confirm: '' });
 
   useEffect(() => {
@@ -14,11 +14,8 @@ export default function Profil() {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       
       if (authUser) {
-        // Logika: Ambil nama dari metadata, jika tidak ada, ambil dari email sebelum @
         const nameFromEmail = authUser.email.split('@')[0];
         const rawName = authUser.user_metadata?.full_name || nameFromEmail;
-        
-        // Kapitalisasi huruf pertama
         const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
         
         setUser({
@@ -48,52 +45,131 @@ export default function Profil() {
     }
   }
 
-  if (loading) return <div className={styles.profilContainer}>Loading...</div>;
+  if (loading) {
+    return (
+      <div className={styles.profilContainer}>
+        <p style={{ color: '#64748b' }}>Loading...</p>
+      </div>
+    );
+  }
+
+  const cardVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    hover: { 
+      y: -4, 
+      borderColor: "rgba(16, 185, 129, 0.3)", 
+      boxShadow: "0 8px 12px -1px rgba(5, 150, 105, 0.1)" 
+    }
+  };
 
   return (
-    <div className={styles.profilContainer}>
-      <h1>Profil & Keamanan</h1>
-      <p>Kelola identitas dan keamanan akun Anda</p>
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={styles.profilContainer}
+    >
+      {/* Premium Glassmorphism Header Card */}
+      <motion.header 
+        className={styles.premiumHeader}
+        initial={{ opacity: 0, x: -20 }} 
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <h1>Profil & Keamanan</h1>
+        <p>Kelola identitas dan keamanan akun Anda</p>
+      </motion.header>
 
-      {/* Profil Section */}
-      <div className={styles.card}>
+      <motion.div 
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        transition={{ duration: 0.2, delay: 0.1 }}
+        className={styles.card}
+      >
         <div className={styles.avatarSection}>
           <div className={styles.avatar}>{user.name.charAt(0).toUpperCase()}</div>
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
-          <span className={styles.badge}>Member sejak {user.memberSince}</span>
+          <h2 className={styles.profileName}>{user.name}</h2>
+          <p className={styles.profileEmail}>{user.email}</p>
+          <span className={styles.badge}>
+            <Calendar size={14} strokeWidth={1.5} />
+            Member sejak {user.memberSince}
+          </span>
         </div>
         <div className={styles.infoGroup}>
-          <p className={styles.label}>Nama Lengkap</p>
-          <p className={styles.value}>{user.name}</p>
+          <div className={styles.infoItem}>
+            <div className={styles.infoLabel}>
+              <User size={18} strokeWidth={1.5} color="#059669" />
+              <p className={styles.label}>Nama Lengkap</p>
+            </div>
+            <p className={styles.value}>{user.name}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoLabel}>
+              <Mail size={18} strokeWidth={1.5} color="#059669" />
+              <p className={styles.label}>Email</p>
+            </div>
+            <p className={styles.value}>{user.email}</p>
+          </div>
         </div>
-        <div className={styles.infoGroup}>
-          <p className={styles.label}>Email</p>
-          <p className={styles.value}>{user.email}</p>
-        </div>
-      </div>
+      </motion.div>
 
-      {/* Ubah Password Section */}
-      <div className={styles.card}>
-        <h3>Ubah Password</h3>
-        <div className={styles.secureForm}>
-          <input 
-            type="password" placeholder="Password saat ini" className={styles.input}
-            value={passwords.current} onChange={(e) => setPasswords({...passwords, current: e.target.value})}
-          />
-          <input 
-            type="password" placeholder="Password baru" className={styles.input}
-            value={passwords.new} onChange={(e) => setPasswords({...passwords, new: e.target.value})}
-          />
-          <input 
-            type="password" placeholder="Konfirmasi password baru" className={styles.input}
-            value={passwords.confirm} onChange={(e) => setPasswords({...passwords, confirm: e.target.value})}
-          />
-          <button className={styles.btnPrimary} onClick={handleUpdatePassword}>
-            Simpan Password Baru
-          </button>
+      <motion.div 
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        transition={{ duration: 0.2, delay: 0.2 }}
+        className={styles.card}
+      >
+        <div className={styles.sectionHeader}>
+          <Lock size={20} strokeWidth={1.5} color="#059669" />
+          <h3>Ubah Password</h3>
         </div>
-      </div>
-    </div>
+        <div className={styles.secureForm}>
+          <div className={styles.inputWrapper}>
+            <Lock size={18} strokeWidth={1.5} color="#64748b" className={styles.inputIcon} />
+            <input 
+              type="password" 
+              placeholder="Password saat ini" 
+              className={styles.input}
+              value={passwords.current} 
+              onChange={(e) => setPasswords({...passwords, current: e.target.value})}
+            />
+          </div>
+          <div className={styles.inputWrapper}>
+            <Lock size={18} strokeWidth={1.5} color="#64748b" className={styles.inputIcon} />
+            <input 
+              type="password" 
+              placeholder="Password baru" 
+              className={styles.input}
+              value={passwords.new} 
+              onChange={(e) => setPasswords({...passwords, new: e.target.value})}
+            />
+          </div>
+          <div className={styles.inputWrapper}>
+            <Lock size={18} strokeWidth={1.5} color="#94a3b8" className={styles.inputIcon} />
+            <input 
+              type="password" 
+              placeholder="Konfirmasi password baru" 
+              className={styles.input}
+              value={passwords.confirm} 
+              onChange={(e) => setPasswords({...passwords, confirm: e.target.value})}
+            />
+          </div>
+          <motion.button 
+            className={styles.btnPrimary} 
+            onClick={handleUpdatePassword}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Save size={18} strokeWidth={2} />
+            Simpan Password Baru
+          </motion.button>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }

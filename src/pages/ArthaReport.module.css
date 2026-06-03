@@ -1,66 +1,338 @@
-.reportContainer { 
-  padding: 2rem; 
-  max-width: 1000px; 
-  margin: 0 auto; 
-  font-family: 'Inter', sans-serif;
+/* Container - Full Width Stretch */
+.reportContainer {
+  padding: 32px;
+  width: 100%;
+  max-width: 100%;
+  background: #f8fafc;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 1;
 }
 
-.statsSection { 
-  background: white; 
-  padding: 24px; 
-  border-radius: 24px; 
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
-  margin-bottom: 2rem; 
-  border: 1px solid #f1f5f9;
-}
-
-.row { margin-bottom: 1.5rem; }
-
-.labelRow { 
-  display: flex; 
-  justify-content: space-between; 
-  margin-bottom: 12px; 
-  font-weight: 600; 
-  color: #334155;
-}
-
-.progressBar { 
-  width: 100%; 
-  height: 12px; 
-  background-color: #f1f5f9; 
-  border-radius: 6px; 
-  overflow: hidden; 
-}
-
-.progressFillIncome { 
-  height: 100%; 
-  background-color: #10b981; 
-  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.progressFillExpense { 
-  height: 100%; 
-  background-color: #ef4444; 
-  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.chartsGrid { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-  gap: 20px; 
-}
-
-.chartBox { 
-  background: white; 
-  padding: 24px; 
-  border-radius: 24px; 
+/* Premium Glassmorphism Header Card */
+.premiumHeader {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-left: 4px solid #059669;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  z-index: 1;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f1f5f9;
 }
 
-.chartBox h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #1e293b;
+.premiumHeader h1 {
+  font-size: 1.8rem;
+  color: #0f172a;
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.premiumHeader p {
+  color: #64748b;
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.statsSection {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  color: #0f172a;
   font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Premium Glassmorphism Header Card */
+.premiumHeader {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-left: 4px solid #059669;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.premiumHeader h1 {
+  font-size: 1.8rem;
+  color: #0f172a;
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.premiumHeader p {
+  color: #64748b;
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.statsSection {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+.statsSection:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 12px -1px rgba(5, 150, 105, 0.1);
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Premium Glassmorphism Header Card */
+.premiumHeader {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(30, 41, 59, 0.4) 100%);
+  backdrop-filter: blur(12px);
+  border-left: 4px solid #ec4899;
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.premiumHeader h1 {
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.premiumHeader p {
+  color: #94a3b8;
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.statsSection {
+  background: rgba(30, 41, 59, 0.45);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid rgba(236, 72, 153, 0.15);
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.row {
+  margin-bottom: 20px;
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.labelWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.incomeAmount {
+  color: #10b981;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.expenseAmount {
+  color: #ef4444;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.progressBar {
+  width: 100%;
+  height: 12px;
+  background-color: rgba(16, 185, 129, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progressFillIncome {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 6px;
+}
+
+.progressFillExpense {
+  height: 100%;
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+  border-radius: 6px;
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartBox {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  transition: all 0.2s ease;
+}
+
+.chartBox:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 12px -1px rgba(5, 150, 105, 0.1);
+}
+
+.chartTitle {
+  margin: 0 0 20px;
+  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 1024px) {
+  .reportContainer {
+    padding: 24px;
+  }
+  
+  .premiumHeader {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reportContainer {
+    padding: 16px 12px;
+  }
+  
+  .premiumHeader h1 {
+    font-size: 1.4rem;
+  }
+  
+  .premiumHeader {
+    padding: 12px 16px;
+  }
+  
+  .statsSection {
+    padding: 16px;
+  }
+  
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chartBox {
+    padding: 16px;
+  }
+  
+  .labelRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(236, 72, 153, 0.1);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legendLabel {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 1024px) {
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .reportContainer {
+    padding: 24px 16px;
+  }
 }

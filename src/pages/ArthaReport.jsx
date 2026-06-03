@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
@@ -25,7 +27,6 @@ export default function ArthaReport() {
       .eq('user_id', user.id);
 
     if (error) {
-      console.error("Error fetching report:", error);
       return;
     }
 
@@ -51,62 +52,158 @@ export default function ArthaReport() {
     setReportData({ income, expense, categories, incomePercent, expensePercent });
   }
 
-  const COLORS = ['#ef4444', '#8b5cf6', '#10b981', '#3b82f6', '#f59e0b', '#ec4899'];
+  const COLORS = ['#059669', '#10b981', '#047857', '#f59e0b', '#8b5cf6', '#ef4444'];
+
+  const cardVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    hover: { 
+      y: -4, 
+      borderColor: "rgba(16, 185, 129, 0.3)", 
+      boxShadow: "0 8px 12px -1px rgba(5, 150, 105, 0.1)" 
+    }
+  };
 
   return (
-    <div className={styles.reportContainer}>
-      <h1>ArthaReport</h1>
-      <p>Analisis kondisi keuanganmu</p>
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={styles.reportContainer}
+    >
+      {/* Premium Glassmorphism Header Card */}
+      <motion.header 
+        className={styles.premiumHeader}
+        initial={{ opacity: 0, x: -20 }} 
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <h1>ArthaReport</h1>
+        <p>Analisis kondisi keuanganmu</p>
+      </motion.header>
 
-      {/* Perbandingan Pemasukan vs Pengeluaran */}
-      <div className={styles.statsSection}>
-        <h3>Pemasukan vs Pengeluaran</h3>
+      <motion.div 
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        transition={{ duration: 0.2 }}
+        className={styles.statsSection}
+      >
+        <div className={styles.sectionHeader}>
+          <BarChart3 size={20} strokeWidth={1.5} color="#059669" />
+          <h3>Pemasukan vs Pengeluaran</h3>
+        </div>
         <div className={styles.row}>
           <div className={styles.labelRow}>
-            <span>Pemasukan</span>
-            <span>Rp {reportData.income.toLocaleString('id-ID')}</span>
+            <span className={styles.labelWithIcon}>
+              <TrendingUp size={18} strokeWidth={1.5} color="#10b981" />
+              Pemasukan
+            </span>
+            <span className={styles.incomeAmount}>Rp {reportData.income.toLocaleString('id-ID')}</span>
           </div>
           <div className={styles.progressBar}>
-            <div className={styles.progressFillIncome} style={{ width: `${reportData.incomePercent}%` }}></div>
+            <motion.div 
+              className={styles.progressFillIncome} 
+              initial={{ width: 0 }}
+              animate={{ width: `${reportData.incomePercent}%` }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            />
           </div>
         </div>
         <div className={styles.row}>
           <div className={styles.labelRow}>
-            <span>Pengeluaran</span>
-            <span>Rp {reportData.expense.toLocaleString('id-ID')}</span>
+            <span className={styles.labelWithIcon}>
+              <TrendingDown size={18} strokeWidth={1.5} color="#ef4444" />
+              Pengeluaran
+            </span>
+            <span className={styles.expenseAmount}>Rp {reportData.expense.toLocaleString('id-ID')}</span>
           </div>
           <div className={styles.progressBar}>
-            <div className={styles.progressFillExpense} style={{ width: `${reportData.expensePercent}%` }}></div>
+            <motion.div 
+              className={styles.progressFillExpense} 
+              initial={{ width: 0 }}
+              animate={{ width: `${reportData.expensePercent}%` }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            />
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className={styles.chartsGrid}>
-        <div className={styles.chartBox}>
-          <h3>Distribusi Pemasukan vs Pengeluaran</h3>
+        <motion.div 
+          variants={cardVariants}
+          initial="initial"
+          animate="animate"
+          whileHover="hover"
+          transition={{ duration: 0.2, delay: 0.1 }}
+          className={styles.chartBox}
+        >
+          <h3 className={styles.chartTitle}>Distribusi Pemasukan vs Pengeluaran</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={[{ name: 'Bulan Ini', Pemasukan: reportData.income, Pengeluaran: reportData.expense }]}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="Pemasukan" fill="#10b981" />
-              <Bar dataKey="Pengeluaran" fill="#ef4444" />
+              <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
+              <YAxis stroke="#94a3b8" fontSize={12} />
+              <Tooltip 
+                contentStyle={{ 
+                  background: 'rgba(30, 41, 59, 0.95)', 
+                  border: '1px solid rgba(236, 72, 153, 0.2)', 
+                  borderRadius: '12px',
+                  color: '#ffffff'
+                }} 
+              />
+              <Bar dataKey="Pemasukan" fill="#10b981" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="Pengeluaran" fill="#ef4444" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </motion.div>
 
-        <div className={styles.chartBox}>
-          <h3>Kategori Pengeluaran</h3>
+        <motion.div 
+          variants={cardVariants}
+          initial="initial"
+          animate="animate"
+          whileHover="hover"
+          transition={{ duration: 0.2, delay: 0.2 }}
+          className={styles.chartBox}
+        >
+          <h3 className={styles.chartTitle}>Kategori Pengeluaran</h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
-              <Pie data={reportData.categories} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80}>
-                {reportData.categories.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
+              <Pie 
+                data={reportData.categories} 
+                dataKey="value" 
+                nameKey="name" 
+                cx="50%" 
+                cy="50%" 
+                outerRadius={80}
+                strokeWidth={0}
+              >
+                {reportData.categories.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
               </Pie>
-              <Tooltip />
+              <Tooltip 
+                contentStyle={{ 
+                  background: 'rgba(30, 41, 59, 0.95)', 
+                  border: '1px solid rgba(236, 72, 153, 0.2)', 
+                  borderRadius: '12px',
+                  color: '#ffffff'
+                }} 
+              />
             </PieChart>
           </ResponsiveContainer>
-        </div>
+          {reportData.categories.length > 0 && (
+            <div className={styles.legend}>
+              {reportData.categories.map((cat, index) => (
+                <div key={cat.name} className={styles.legendItem}>
+                  <span className={styles.legendDot} style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                  <span className={styles.legendLabel}>{cat.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

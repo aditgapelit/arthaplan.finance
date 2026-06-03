@@ -1,0 +1,80 @@
+.btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-family: inherit;
+  letter-spacing: -0.02em;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary variant */
+.btn-primary {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 16px -1px rgba(5, 150, 105, 0.3);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Secondary variant */
+.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #0f172a;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: #059669;
+  box-shadow: 0 8px 12px -1px rgba(5, 150, 105, 0.1);
+}
+
+/* Outline variant */
+.btn-outline {
+  background-color: transparent;
+  color: #059669;
+  border: 2px solid rgba(16, 185, 129, 0.5);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background-color: rgba(5, 150, 105, 0.05);
+  border-color: #059669;
+  box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.2);
+}
+
+/* Sizes */
+.size-sm {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.size-md {
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+.size-lg {
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+.fullWidth {
+  width: 100%;
+}

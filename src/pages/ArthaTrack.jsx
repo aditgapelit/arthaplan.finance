@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import * as tf from '@tensorflow/tfjs';
+import { Plus, Sparkles, TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import styles from './ArthaTrack.module.css';
@@ -11,7 +13,6 @@ export default function ArthaTrack() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [aiInsights, setAiInsights] = useState(["Menganalisis pola pengeluaran..."]);
 
-  // 1. Perbaikan: Bungkus expenseStats dengan useMemo
   const expenseStats = useMemo(() => {
     return transactions
       .filter(t => t.type === 'expense')
@@ -19,7 +20,7 @@ export default function ArthaTrack() {
         acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
         return acc;
       }, {});
-  }, [transactions]); // Hanya hitung ulang jika transactions berubah
+  }, [transactions]);
 
   const totals = useMemo(() => {
     return transactions.reduce((acc, t) => {
@@ -40,7 +41,6 @@ export default function ArthaTrack() {
     await model.fit(xs, ys, { epochs: 100, verbose: 0 });
     const prediction = model.predict(tf.tensor2d([4], [1, 1]));
     const val = prediction.dataSync()[0];
-    // Bersihkan tensor untuk mencegah memory leak
     xs.dispose(); ys.dispose(); model.dispose(); prediction.dispose();
     return val;
   };
@@ -57,7 +57,6 @@ export default function ArthaTrack() {
 
   useEffect(() => { fetchTransactions(); }, [user]);
 
-  // 2. Perbaikan: useEffect ini sekarang aman karena expenseStats adalah hasil useMemo
   useEffect(() => {
     async function runAiAnalysis() {
       const insights = [];
@@ -67,85 +66,164 @@ export default function ArthaTrack() {
         const top = categories.reduce((a, b) => expenseStats[a] > expenseStats[b] ? a : b);
         const topAmount = expenseStats[top];
         
-        insights.push(`⚡ ${top} menjadi pengeluaran terbesar (Rp ${topAmount.toLocaleString('id-ID')}).`);
+        insights.push(`${top} menjadi pengeluaran terbesar (Rp ${topAmount.toLocaleString('id-ID')}).`);
 
         const trend = await predictCategoryTrend([topAmount * 0.7, topAmount * 0.85, topAmount]);
         
         if (trend && trend > topAmount * 1.1) {
-          insights.push(`🤖 AI Learning mendeteksi tren kenaikan pengeluaran pada ${top}.`);
+          insights.push(`AI Learning mendeteksi tren kenaikan pengeluaran pada ${top}.`);
         } else {
-          insights.push(`✅ Tren pengeluaran pada ${top} saat ini relatif stabil.`);
+          insights.push(`Tren pengeluaran pada ${top} saat ini relatif stabil.`);
         }
       } else {
-        insights.push("💡 Mulai catat pengeluaran agar AI Learning bisa menganalisis pola belanjamu.");
+        insights.push("Mulai catat pengeluaran agar AI Learning bisa menganalisis pola belanjamu.");
       }
       setAiInsights(insights);
     }
     runAiAnalysis();
-  }, [expenseStats]); // Sekarang aman dan tidak looping
+  }, [expenseStats]);
 
   const maxExpense = Math.max(...Object.values(expenseStats), 1);
 
+  const cardVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    hover: { 
+      y: -4, 
+      borderColor: "rgba(16, 185, 129, 0.3)", 
+      boxShadow: "0 8px 12px -1px rgba(5, 150, 105, 0.1)" 
+    }
+  };
+
   return (
-    <div className={styles.trackContainer}>
-      <h1>ArthaTrack</h1>
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={styles.trackContainer}
+    >
+      {/* Premium Glassmorphism Header Card */}
+      <motion.header 
+        className={styles.premiumHeader}
+        initial={{ opacity: 0, x: -20 }} 
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <h1>ArthaTrack</h1>
+        <p>Lacak dan kelola transaksi keuanganmu</p>
+      </motion.header>
 
-      <div className={styles.insightCard} style={{ 
-        padding: '15px', marginBottom: '20px', backgroundColor: '#f0f9ff', 
-        border: '1px solid #bae6fd', borderRadius: '8px' 
-      }}>
-        <strong>ArthaAI Learning:</strong>
-        <ul style={{ margin: '5px 0 0 20px', padding: 0 }}>
-          {aiInsights.map((msg, i) => <li key={i} style={{ fontSize: '0.9rem' }}>{msg}</li>)}
+      <motion.div 
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        transition={{ duration: 0.2 }}
+        className={styles.insightCard}
+      >
+        <div className={styles.insightHeader}>
+          <Sparkles size={20} strokeWidth={1.5} color="#059669" />
+          <strong>ArthaAI Learning</strong>
+        </div>
+        <ul className={styles.insightList}>
+          {aiInsights.map((msg, i) => <li key={i}>{msg}</li>)}
         </ul>
-      </div>
+      </motion.div>
 
-      {/* ... (sisa UI Anda tetap sama) */}
-      <div className={styles.statsCard} style={{ display: 'flex', gap: '20px' }}>
-        <div>
-          <p>Total Pemasukan</p>
-          <h3 style={{ color: '#059669' }}>Rp {totals.income.toLocaleString('id-ID')}</h3>
+      <motion.div 
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        transition={{ duration: 0.2, delay: 0.1 }}
+        className={styles.statsCard}
+      >
+        <div className={styles.statsRow}>
+          <div className={styles.statItem}>
+            <div className={styles.statHeader}>
+              <TrendingUp size={20} strokeWidth={1.5} color="#10b981" />
+              <p>Total Pemasukan</p>
+            </div>
+            <h3 className={styles.incomeValue}>Rp {totals.income.toLocaleString('id-ID')}</h3>
+          </div>
+          <div className={styles.statItem}>
+            <div className={styles.statHeader}>
+              <TrendingDown size={20} strokeWidth={1.5} color="#ef4444" />
+              <p>Total Pengeluaran</p>
+            </div>
+            <h3 className={styles.expenseValue}>Rp {totals.expense.toLocaleString('id-ID')}</h3>
+          </div>
         </div>
-        <div>
-          <p>Total Pengeluaran</p>
-          <h3 style={{ color: '#dc2626' }}>Rp {totals.expense.toLocaleString('id-ID')}</h3>
-        </div>
-      </div>
+      </motion.div>
       
-      <div className={styles.statsCard}>
-        <h3>Pengeluaran per Kategori</h3>
+      <motion.div 
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        transition={{ duration: 0.2, delay: 0.2 }}
+        className={styles.statsCard}
+      >
+        <div className={styles.sectionHeader}>
+          <BarChart3 size={20} strokeWidth={1.5} color="#059669" />
+          <h3>Pengeluaran per Kategori</h3>
+        </div>
         {Object.entries(expenseStats).length > 0 ? (
           Object.entries(expenseStats).map(([cat, total]) => (
-            <div key={cat} style={{ marginBottom: '15px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '4px' }}>
-                <span>{cat}</span> <span>Rp {total.toLocaleString('id-ID')}</span>
+            <div key={cat} className={styles.categoryItem}>
+              <div className={styles.categoryHeader}>
+                <span className={styles.categoryName}>{cat}</span>
+                <span className={styles.categoryAmount}>Rp {total.toLocaleString('id-ID')}</span>
               </div>
               <div className={styles.categoryBar}>
-                <div className={styles.progressFill} style={{ width: `${(total / maxExpense) * 100}%` }}></div>
+                <motion.div 
+                  className={styles.progressFill} 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(total / maxExpense) * 100}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                />
               </div>
             </div>
           ))
         ) : (
-          <p style={{ fontSize: '0.9rem', color: '#64748b' }}>Belum ada data pengeluaran.</p>
+          <p className={styles.emptyText}>Belum ada data pengeluaran.</p>
         )}
-      </div>
+      </motion.div>
 
-      <button className={styles.addBtn} onClick={() => setIsModalOpen(true)}>+ Tambah Transaksi</button>
+      <motion.button 
+        className={styles.addBtn} 
+        onClick={() => setIsModalOpen(true)}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <Plus size={18} strokeWidth={2} />
+        Tambah Transaksi
+      </motion.button>
 
-      <div className={styles.statsCard}>
-        <h3>10 Transaksi Terakhir</h3>
+      <motion.div 
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        transition={{ duration: 0.2, delay: 0.3 }}
+        className={styles.statsCard}
+      >
+        <h3 className={styles.sectionTitle}>10 Transaksi Terakhir</h3>
         {transactions.slice(0, 10).map((t) => (
           <div key={t.id} className={styles.transactionItem}>
             <div>
-              <strong>{t.description}</strong><br />
-              <small style={{ color: '#64748b' }}>{t.category}</small>
+              <strong className={styles.transactionDesc}>{t.description}</strong>
+              <small className={styles.transactionCategory}>{t.category}</small>
             </div>
-            <span style={{ color: t.type === 'expense' ? '#dc2626' : '#059669', fontWeight: 'bold' }}>
+            <span className={t.type === 'expense' ? styles.expenseAmount : styles.incomeAmount}>
               {t.type === 'expense' ? '-' : '+'}Rp {Number(t.amount || 0).toLocaleString('id-ID')}
             </span>
           </div>
         ))}
-      </div>
+        {transactions.length === 0 && (
+          <p className={styles.emptyText}>Belum ada transaksi.</p>
+        )}
+      </motion.div>
 
       {isModalOpen && (
         <AddTransactionModal 
@@ -154,6 +232,6 @@ export default function ArthaTrack() {
           onSave={() => { fetchTransactions(); setIsModalOpen(false); }} 
         />
       )}
-    </div>
+    </motion.div>
   );
 }
