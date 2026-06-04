@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Wallet, TrendingUp, TrendingDown, Target, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Wallet, TrendingUp, TrendingDown, Target, Sparkles, PlusCircle, FileBarChart, ArrowRightLeft, CircleDollarSign } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import { useBalance } from '../hooks/useBalance';
 import PageHeader from '../components/PageHeader';
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import styles from './Dashboard.module.css';
 
 const AI_API_BASE_URL = import.meta.env.VITE_AI_API_URL || 'http://localhost:8000';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const balance = useBalance();
-  const [stats, setStats] = useState({ income: 0, expense: 0, activeGoals: 0, userName: '' });
+  const [stats, setStats] = useState({ income: 0, expense: 0, activeGoals: 0, totalGoals: 0, userName: '', topCategory: 'Belum ada data' });
   const [aiMessages, setAiMessages] = useState(["Menganalisis keuangan Anda..."]);
 
-  const generateFallbackInsight = (inc, exp, activeGoals, totalGoals, prediction) => {
+  const generateFallbackInsight = (inc, exp, activeGoals, totalGoals, prediction, topCategory) => {
     const messages = [];
     const ratio = inc > 0 ? exp / inc : 0;
 
@@ -39,6 +42,10 @@ export default function Dashboard() {
       } else {
         messages.push("Pengeluaranmu dalam kondisi stabil.");
       }
+    }
+
+    if (topCategory && topCategory !== 'Belum ada data') {
+      messages.push(`Kategori terbesar kamu saat ini: ${topCategory}.`);
     }
 
     setAiMessages(messages);
@@ -68,8 +75,23 @@ export default function Dashboard() {
       const exp = trans.filter(t => t.type === 'expense').reduce((a, b) => a + Number(b.amount), 0) || 0;
       const totalGoalsCount = goals.length;
       const activeGoalsCount = goals.filter(g => Number(g.saved_amount) < Number(g.target_amount)).length;
+      const topCategory = trans
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => {
+          acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
+          return acc;
+        }, {});
 
-      setStats({ income: inc, expense: exp, activeGoals: activeGoalsCount, userName: formattedName });
+      const sortedTopCategory = Object.entries(topCategory).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Belum ada data';
+
+      setStats({
+        income: inc,
+        expense: exp,
+        activeGoals: activeGoalsCount,
+        totalGoals: totalGoalsCount,
+        userName: formattedName,
+        topCategory: sortedTopCategory,
+      });
 
       const expenseHistory = [exp * 0.8, exp * 0.9, exp];
       try {
@@ -93,7 +115,7 @@ export default function Dashboard() {
         setAiMessages(Array.isArray(data.insights) && data.insights.length > 0 ? data.insights : ["Menganalisis keuangan Anda..."]);
       } catch {
         const fallbackPrediction = expenseHistory[expenseHistory.length - 1] || null;
-        generateFallbackInsight(inc, exp, activeGoalsCount, totalGoalsCount, fallbackPrediction);
+        generateFallbackInsight(inc, exp, activeGoalsCount, totalGoalsCount, fallbackPrediction, sortedTopCategory);
       }
     }
     fetchDashboardData();
@@ -111,6 +133,19 @@ export default function Dashboard() {
       boxShadow: "0 8px 12px -1px rgba(5, 150, 105, 0.1)" 
     }
   };
+
+  const goalProgress = stats.totalGoals > 0 ? (stats.activeGoals / stats.totalGoals) * 100 : 0;
+  const goalChartData = [
+    { name: 'Completed', value: stats.totalGoals > 0 ? stats.totalGoals - stats.activeGoals : 0, fill: '#10b981' },
+    { name: 'Active', value: stats.activeGoals, fill: '#f59e0b' },
+  ].filter(item => item.value > 0);
+
+  const quickActions = [
+    { label: 'Tambah Transaksi', icon: PlusCircle, action: () => navigate('/track'), color: '#0ea5e9' },
+    { label: 'Tambah Goal', icon: Target, action: () => navigate('/goal'), color: '#8b5cf6' },
+    { label: 'Lihat Report', icon: FileBarChart, action: () => navigate('/report'), color: '#f59e0b' },
+    { label: 'Kelola Track', icon: ArrowRightLeft, action: () => navigate('/track'), color: '#14b8a6' },
+  ];
 
   return (
     <motion.div 
@@ -156,6 +191,92 @@ export default function Dashboard() {
           {aiMessages.map((msg, index) => <li key={index}>{msg}</li>)}
         </ul>
       </motion.div>
+
+      <div className={styles.dashboardGrid}>
+        <motion.div
+          variants={cardVariants}
+          initial="initial"
+          animate="animate"
+          whileHover="hover"
+          transition={{ duration: 0.2, delay: 0.05 }}
+          className={styles.goalProgressCard}
+        >
+          <div className={styles.sectionHeading}>
+            <Target size={20} strokeWidth={1.5} color="#059669" />
+            <h3>Progress to Goal</h3>
+          </div>
+          <div className={styles.goalChartWrap}>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={goalChartData.length > 0 ? goalChartData : [{ name: 'Empty', value: 1, fill: '#e2e8f0' }]}
+                  dataKey="value"
+                  innerRadius={70}
+                  outerRadius={95}
+                  startAngle={90}
+                  endAngle={-270}
+                  strokeWidth={0}
+                >
+                  {(goalChartData.length > 0 ? goalChartData : [{ fill: '#e2e8f0' }]).map((entry, index) => (
+                    <Cell key={index} fill={entry.fill} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+            <div className={styles.goalChartCenter}>
+              <span className={styles.goalChartValue}>{Math.round(goalProgress)}%</span>
+              <span className={styles.goalChartLabel}>goal progress</span>
+            </div>
+          </div>
+          <p className={styles.goalProgressText}>
+            {stats.totalGoals > 0
+              ? `${stats.activeGoals} dari ${stats.totalGoals} target masih aktif.`
+              : 'Belum ada target keuangan yang dibuat.'}
+          </p>
+        </motion.div>
+
+        <motion.div
+          variants={cardVariants}
+          initial="initial"
+          animate="animate"
+          whileHover="hover"
+          transition={{ duration: 0.2, delay: 0.1 }}
+          className={styles.quickActionsCard}
+        >
+          <div className={styles.sectionHeading}>
+            <CircleDollarSign size={20} strokeWidth={1.5} color="#059669" />
+            <h3>Quick Actions</h3>
+          </div>
+          <div className={styles.quickActionsGrid}>
+            {quickActions.map((item) => {
+              const Icon = item.icon;
+              return (
+                <motion.button
+                  key={item.label}
+                  type="button"
+                  onClick={item.action}
+                  className={styles.quickActionButton}
+                  whileHover={{ y: -2, scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  style={{
+                    '--action-color': item.color,
+                    background: `linear-gradient(135deg, ${item.color}14, rgba(255,255,255,0.94))`,
+                  }}
+                >
+                  <span className={styles.quickActionIcon}>
+                    <Icon size={18} strokeWidth={1.8} />
+                  </span>
+                  <span>{item.label}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+          <div className={styles.topCategoryBadge}>
+            <span>Kategori terbesar:</span>
+            <strong>{stats.topCategory}</strong>
+          </div>
+        </motion.div>
+      </div>
 
       <motion.div 
         variants={cardVariants}

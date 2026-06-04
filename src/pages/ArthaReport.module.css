@@ -151,6 +151,132 @@
   transition: all 0.2s ease;
 }
 
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.summaryCard {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.summaryCard:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 12px -1px rgba(5, 150, 105, 0.1);
+}
+
+.summaryTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.summaryIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  flex-shrink: 0;
+}
+
+.summaryLabel {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.summaryValue {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.summaryDescription {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.tone_blue .summaryIcon {
+  background: rgba(14, 165, 233, 0.14);
+  color: #0ea5e9;
+}
+
+.tone_red .summaryIcon {
+  background: rgba(244, 63, 94, 0.14);
+  color: #f43f5e;
+}
+
+.tone_amber .summaryIcon {
+  background: rgba(245, 158, 11, 0.14);
+  color: #f59e0b;
+}
+
+.tone_emerald .summaryIcon {
+  background: rgba(34, 197, 94, 0.14);
+  color: #22c55e;
+}
+
+.tone_purple .summaryIcon {
+  background: rgba(139, 92, 246, 0.14);
+  color: #8b5cf6;
+}
+
+.tone_cyan .summaryIcon {
+  background: rgba(20, 184, 166, 0.14);
+  color: #14b8a6;
+}
+
+.insightPanel {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.insightHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.insightHeader h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.insightList {
+  margin: 0;
+  padding-left: 22px;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.insightList li {
+  margin-bottom: 8px;
+  padding-left: 2px;
+}
+
 .sectionHeader {
   display: flex;
   align-items: center;
@@ -190,13 +316,13 @@
 }
 
 .incomeAmount {
-  color: #10b981;
+  color: #0ea5e9;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .expenseAmount {
-  color: #ef4444;
+  color: #f43f5e;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -204,20 +330,20 @@
 .progressBar {
   width: 100%;
   height: 12px;
-  background-color: rgba(16, 185, 129, 0.15);
+  background: linear-gradient(90deg, rgba(14, 165, 233, 0.12), rgba(139, 92, 246, 0.12));
   border-radius: 6px;
   overflow: hidden;
 }
 
 .progressFillIncome {
   height: 100%;
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: linear-gradient(90deg, #0ea5e9, #14b8a6);
   border-radius: 6px;
 }
 
 .progressFillExpense {
   height: 100%;
-  background: linear-gradient(90deg, #ef4444, #dc2626);
+  background: linear-gradient(90deg, #f43f5e, #fb7185);
   border-radius: 6px;
 }
 
@@ -231,6 +357,10 @@
 
 @media (max-width: 768px) {
   .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryGrid {
     grid-template-columns: 1fr;
   }
 }
@@ -256,6 +386,32 @@
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(16, 185, 129, 0.12);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legendLabel {
+  color: #64748b;
+  font-size: 0.85rem;
 }
 
 @media (max-width: 1024px) {
@@ -296,38 +452,6 @@
   .labelRow {
     flex-direction: column;
     gap: 8px;
-  }
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(16, 185, 129, 0.12);
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.legendDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.legendLabel {
-  color: #94a3b8;
-  font-size: 0.85rem;
-}
-
-@media (max-width: 1024px) {
-  .chartsGrid {
-    grid-template-columns: 1fr;
   }
 }
 

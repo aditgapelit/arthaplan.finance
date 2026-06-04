@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
+import { BarChart3, TrendingUp, TrendingDown, Sparkles, Wallet, Target, PiggyBank } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import { useAuth } from '../context/AuthContext';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
@@ -14,7 +14,11 @@ export default function ArthaReport() {
     expense: 0, 
     categories: [], 
     incomePercent: 0,
-    expensePercent: 0
+    expensePercent: 0,
+    netBalance: 0,
+    savingsRate: 0,
+    topCategory: 'Belum ada data',
+    transactionCount: 0
   });
 
   useEffect(() => {
@@ -36,6 +40,8 @@ export default function ArthaReport() {
       const total = income + expense;
       const incomePercent = total > 0 ? (income / total) * 100 : 0;
       const expensePercent = total > 0 ? (expense / total) * 100 : 0;
+      const netBalance = income - expense;
+      const savingsRate = income > 0 ? ((netBalance > 0 ? netBalance : 0) / income) * 100 : 0;
 
       const categoryTotals = transactions
         .filter(t => t.type === 'expense')
@@ -49,13 +55,27 @@ export default function ArthaReport() {
         value: categoryTotals[key]
       }));
 
-      setReportData({ income, expense, categories, incomePercent, expensePercent });
+      const topCategory = categories.length > 0
+        ? categories.sort((a, b) => b.value - a.value)[0].name
+        : 'Belum ada data';
+
+      setReportData({
+        income,
+        expense,
+        categories,
+        incomePercent,
+        expensePercent,
+        netBalance,
+        savingsRate,
+        topCategory,
+        transactionCount: transactions.length,
+      });
     }
 
     fetchReportData();
   }, [user]);
 
-  const COLORS = ['#059669', '#10b981', '#047857', '#f59e0b', '#8b5cf6', '#ef4444'];
+  const COLORS = ['#0ea5e9', '#14b8a6', '#22c55e', '#f59e0b', '#8b5cf6', '#f43f5e', '#ec4899', '#6366f1'];
 
   const cardVariants = {
     initial: { opacity: 0, y: 20 },
@@ -66,6 +86,52 @@ export default function ArthaReport() {
       boxShadow: "0 8px 12px -1px rgba(5, 150, 105, 0.1)" 
     }
   };
+
+  const insights = [
+    {
+      label: 'Net Balance',
+      value: reportData.netBalance >= 0 ? `Rp ${reportData.netBalance.toLocaleString('id-ID')}` : `-Rp ${Math.abs(reportData.netBalance).toLocaleString('id-ID')}`,
+      description: reportData.netBalance >= 0 ? 'Surplus bulan ini' : 'Defisit bulan ini',
+      icon: Wallet,
+      tone: reportData.netBalance >= 0 ? 'blue' : 'red',
+    },
+    {
+      label: 'Savings Rate',
+      value: `${reportData.savingsRate.toFixed(1)}%`,
+      description: reportData.savingsRate >= 20 ? 'Sehat untuk target keuangan' : 'Perlu kontrol pengeluaran',
+      icon: PiggyBank,
+      tone: reportData.savingsRate >= 20 ? 'emerald' : 'amber',
+    },
+    {
+      label: 'Top Category',
+      value: reportData.topCategory,
+      description: 'Kategori pengeluaran terbesar',
+      icon: Target,
+      tone: 'purple',
+    },
+    {
+      label: 'Transaction Count',
+      value: reportData.transactionCount,
+      description: 'Total transaksi bulan ini',
+      icon: BarChart3,
+      tone: 'cyan',
+    },
+  ];
+
+  const aiInsights = [
+    reportData.expense > reportData.income
+      ? 'Pengeluaran kamu saat ini lebih tinggi daripada pemasukan. Ini tanda perlu rem anggaran.'
+      : 'Pemasukan kamu masih lebih besar dari pengeluaran. Kondisi ini relatif aman.',
+    reportData.savingsRate >= 20
+      ? `Tingkat menabungmu sehat di ${reportData.savingsRate.toFixed(1)}%.`
+      : `Tingkat menabungmu masih rendah di ${reportData.savingsRate.toFixed(1)}%.`,
+    reportData.topCategory !== 'Belum ada data'
+      ? `Kategori pengeluaran terbesar adalah ${reportData.topCategory}.`
+      : 'Belum ada kategori pengeluaran yang bisa dianalisis.',
+    reportData.netBalance >= 0
+      ? 'Target keuangan bulanan masih aman jika pola ini dipertahankan.'
+      : 'Target keuangan berisiko tertunda jika pola pengeluaran tidak diubah.',
+  ];
 
   return (
     <motion.div 
@@ -126,6 +192,51 @@ export default function ArthaReport() {
             />
           </div>
         </div>
+      </motion.div>
+
+      <div className={styles.summaryGrid}>
+        {insights.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <motion.div
+              key={item.label}
+              variants={cardVariants}
+              initial="initial"
+              animate="animate"
+              whileHover="hover"
+              transition={{ duration: 0.2, delay: 0.05 * index }}
+              className={`${styles.summaryCard} ${styles[`tone_${item.tone}`]}`}
+            >
+              <div className={styles.summaryTop}>
+                <div className={styles.summaryIcon}>
+                  <Icon size={18} strokeWidth={1.5} />
+                </div>
+                <span className={styles.summaryLabel}>{item.label}</span>
+              </div>
+              <div className={styles.summaryValue}>{item.value}</div>
+              <p className={styles.summaryDescription}>{item.description}</p>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <motion.div
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        transition={{ duration: 0.2, delay: 0.1 }}
+        className={styles.insightPanel}
+      >
+        <div className={styles.insightHeader}>
+          <Sparkles size={20} strokeWidth={1.5} color="#059669" />
+          <h3>AI Insight</h3>
+        </div>
+        <ul className={styles.insightList}>
+          {aiInsights.map((insight, index) => (
+            <li key={index}>{insight}</li>
+          ))}
+        </ul>
       </motion.div>
 
       <div className={styles.chartsGrid}>
