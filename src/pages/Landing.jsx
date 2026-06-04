@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   TrendingUp,
-  Zap,
   CreditCard,
   Smartphone,
   Bell,
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react';
 import styles from './Landing.module.css';
 import Navbar from '../components/Navbar';
+import mokupImage from '../assets/mokup.jpeg';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -159,18 +159,7 @@ export default function Landing() {
             animate={{ y: [0, -20, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <div className={styles.cardGradient}></div>
-            <div className={styles.cardContent}>
-              <div className={styles.cardHeader}>
-                <Wallet size={24} className={styles.walletIcon} />
-                <span className={styles.cardLabel}>Total Balance</span>
-              </div>
-              <h2 className={styles.cardAmount}>$24,580.50</h2>
-              <div className={styles.cardFooter}>
-                <TrendingUp size={16} className={styles.trendingIcon} />
-                <p className={styles.cardInfo}>+5.2% from last month</p>
-              </div>
-            </div>
+            <img src={mokupImage} alt="ArthaPlan mockup" className={styles.mockupImage} />
           </motion.div>
         </motion.div>
       </section>

@@ -3,7 +3,7 @@
   padding: 32px;
   width: 100%;
   max-width: 100%;
-  background: #f8fafc;
+  background: var(--app-bg);
   min-height: 100vh;
   position: relative;
   display: flex;
@@ -14,10 +14,10 @@
 
 /* Premium Glassmorphism Header Card */
 .premiumHeader {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-left: 4px solid #059669;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
   border-radius: 16px;
   padding: 24px;
   position: relative;
@@ -27,14 +27,14 @@
 
 .premiumHeader h1 {
   font-size: 1.8rem;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 0;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 .premiumHeader p {
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 8px 0 0;
   font-size: 0.95rem;
   line-height: 1.5;
@@ -42,9 +42,9 @@
 
 /* Insight Card */
 .insightCard {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--border);
   padding: 20px 24px;
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -57,7 +57,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #0f172a;
+  color: var(--text-primary);
   font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: 12px;
@@ -66,7 +66,7 @@
 .insightList {
   margin: 0;
   padding-left: 20px;
-  color: #64748b;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -76,12 +76,12 @@
 
 /* Card Modern */
 .statsCard {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
   padding: 24px;
   border-radius: 20px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--border);
   position: relative;
   z-index: 1;
   transition: all 0.2s ease;
@@ -110,7 +110,7 @@
 
 .statHeader p {
   margin: 0;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -139,7 +139,7 @@
 
 .sectionHeader h3 {
   margin: 0;
-  color: #0f172a;
+  color: var(--text-primary);
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -165,13 +165,13 @@
 }
 
 .categoryName {
-  color: #0f172a;
+  color: var(--text-primary);
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .categoryAmount {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -185,18 +185,18 @@
 .progressFill {
   height: 100%;
   border-radius: 5px;
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: linear-gradient(90deg, var(--accent-light), var(--accent));
 }
 
 .emptyText {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0;
 }
 
 /* Tombol Aksi */
 .addBtn {
-  background: linear-gradient(135deg, #059669, #10b981);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
   color: white;
   border: none;
   padding: 14px 28px;
@@ -232,7 +232,7 @@
 }
 
 .transactionDesc {
-  color: #0f172a;
+  color: var(--text-primary);
   font-weight: 600;
   display: block;
   margin-bottom: 4px;
@@ -240,7 +240,7 @@
 }
 
 .transactionCategory {
-  color: #94a3b8;
+  color: var(--text-tertiary);
   font-size: 0.85rem;
 }
 

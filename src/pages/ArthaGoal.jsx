@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Target, Wallet, Plus, Calendar } from 'lucide-react';
 import { supabase } from '../supabase/client';
@@ -18,11 +18,8 @@ export default function ArthaGoal() {
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (user?.id) fetchGoals();
-  }, [user]);
-
-  async function fetchGoals() {
+  const fetchGoals = useCallback(async () => {
+    if (!user?.id) return;
     setLoading(true);
     const { data, error } = await supabase
       .from('goals')
@@ -31,7 +28,12 @@ export default function ArthaGoal() {
 
     if (!error) setGoals(data || []);
     setLoading(false);
-  }
+  }, [user]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchGoals();
+  }, [fetchGoals]);
 
   const handleDeposit = async (amount) => {
     if (!selectedGoal || !amount) return;

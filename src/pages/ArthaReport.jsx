@@ -18,40 +18,42 @@ export default function ArthaReport() {
   });
 
   useEffect(() => {
-    if (user) fetchReportData();
-  }, [user]);
+    async function fetchReportData() {
+      if (!user) return;
 
-  async function fetchReportData() {
-    const { data: transactions, error } = await supabase
-      .from('transactions')
-      .select('*')
-      .eq('user_id', user.id);
+      const { data: transactions, error } = await supabase
+        .from('transactions')
+        .select('*')
+        .eq('user_id', user.id);
 
-    if (error) {
-      return;
+      if (error) {
+        return;
+      }
+
+      const income = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + Number(t.amount), 0);
+      const expense = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + Number(t.amount), 0);
+      
+      const total = income + expense;
+      const incomePercent = total > 0 ? (income / total) * 100 : 0;
+      const expensePercent = total > 0 ? (expense / total) * 100 : 0;
+
+      const categoryTotals = transactions
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => {
+          acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
+          return acc;
+        }, {});
+
+      const categories = Object.keys(categoryTotals).map(key => ({
+        name: key,
+        value: categoryTotals[key]
+      }));
+
+      setReportData({ income, expense, categories, incomePercent, expensePercent });
     }
 
-    const income = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + Number(t.amount), 0);
-    const expense = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + Number(t.amount), 0);
-    
-    const total = income + expense;
-    const incomePercent = total > 0 ? (income / total) * 100 : 0;
-    const expensePercent = total > 0 ? (expense / total) * 100 : 0;
-
-    const categoryTotals = transactions
-      .filter(t => t.type === 'expense')
-      .reduce((acc, t) => {
-        acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
-        return acc;
-      }, {});
-
-    const categories = Object.keys(categoryTotals).map(key => ({
-      name: key,
-      value: categoryTotals[key]
-    }));
-
-    setReportData({ income, expense, categories, incomePercent, expensePercent });
-  }
+    fetchReportData();
+  }, [user]);
 
   const COLORS = ['#059669', '#10b981', '#047857', '#f59e0b', '#8b5cf6', '#ef4444'];
 

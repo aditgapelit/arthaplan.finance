@@ -8,13 +8,15 @@ import {
   FileBarChart, 
   User,
   LogOut,
-  ChevronLeft
+  ChevronLeft,
+  MoonStar,
+  SunMedium
 } from 'lucide-react';
 import { supabase } from '../supabase/client';
 import styles from './Sidebar.module.css';
 import logoImage from '../assets/logo.jpeg'; 
 
-export default function Sidebar({ onClose }) {
+export default function Sidebar({ onClose, isDarkMode, onToggleTheme }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [userData, setUserData] = useState({ name: 'User', email: '' });
@@ -77,6 +79,7 @@ export default function Sidebar({ onClose }) {
           <ChevronLeft size={18} strokeWidth={1.5} color="#64748b" />
         </motion.button>
       </div>
+
 
       <nav className={styles.nav}>
         {menuItems.map((item) => {

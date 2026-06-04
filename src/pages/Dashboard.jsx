@@ -44,35 +44,6 @@ export default function Dashboard() {
     setAiMessages(messages);
   };
 
-  const fetchAiInsights = async (inc, exp, activeGoalsCount, totalGoalsCount) => {
-    const expenseHistory = [exp * 0.8, exp * 0.9, exp];
-
-    try {
-      const response = await fetch(`${AI_API_BASE_URL}/api/ai/dashboard`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          income: inc,
-          expense: exp,
-          active_goals: activeGoalsCount,
-          total_goals: totalGoalsCount,
-          expense_history: expenseHistory,
-        }),
-      });
-
-      if (!response.ok) throw new Error('AI API failed');
-
-      const data = await response.json();
-      setAiMessages(Array.isArray(data.insights) && data.insights.length > 0 ? data.insights : ["Menganalisis keuangan Anda..."]);
-      return;
-    } catch (error) {
-      const fallbackPrediction = expenseHistory.length >= 3 ? expenseHistory[expenseHistory.length - 1] : null;
-      generateFallbackInsight(inc, exp, activeGoalsCount, totalGoalsCount, fallbackPrediction);
-    }
-  };
-
   useEffect(() => {
     let active = true;
 
@@ -99,7 +70,31 @@ export default function Dashboard() {
       const activeGoalsCount = goals.filter(g => Number(g.saved_amount) < Number(g.target_amount)).length;
 
       setStats({ income: inc, expense: exp, activeGoals: activeGoalsCount, userName: formattedName });
-      await fetchAiInsights(inc, exp, activeGoalsCount, totalGoalsCount);
+
+      const expenseHistory = [exp * 0.8, exp * 0.9, exp];
+      try {
+        const response = await fetch(`${AI_API_BASE_URL}/api/ai/dashboard`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            income: inc,
+            expense: exp,
+            active_goals: activeGoalsCount,
+            total_goals: totalGoalsCount,
+            expense_history: expenseHistory,
+          }),
+        });
+
+        if (!response.ok) throw new Error('AI API failed');
+
+        const data = await response.json();
+        setAiMessages(Array.isArray(data.insights) && data.insights.length > 0 ? data.insights : ["Menganalisis keuangan Anda..."]);
+      } catch {
+        const fallbackPrediction = expenseHistory[expenseHistory.length - 1] || null;
+        generateFallbackInsight(inc, exp, activeGoalsCount, totalGoalsCount, fallbackPrediction);
+      }
     }
     fetchDashboardData();
     return () => {

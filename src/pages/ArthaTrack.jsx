@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Sparkles, TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
 import { supabase } from '../supabase/client';
@@ -33,7 +33,7 @@ export default function ArthaTrack() {
     }, { income: 0, expense: 0 });
   }, [transactions]);
 
-  const buildFallbackInsights = async (expenseStatsMap) => {
+  const buildFallbackInsights = (expenseStatsMap) => {
     const insights = [];
     const categories = Object.keys(expenseStatsMap);
 
@@ -53,7 +53,7 @@ export default function ArthaTrack() {
     setAiInsights(insights);
   };
 
-  async function fetchTransactions() {
+  const fetchTransactions = useCallback(async () => {
     if (!user) return;
     const { data } = await supabase
       .from('transactions')
@@ -61,9 +61,12 @@ export default function ArthaTrack() {
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
     setTransactions(data || []);
-  }
+  }, [user]);
 
-  useEffect(() => { fetchTransactions(); }, [user]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   useEffect(() => {
     async function runAiAnalysis() {
@@ -92,11 +95,11 @@ export default function ArthaTrack() {
             `${top} menjadi pengeluaran terbesar (Rp ${topAmount.toLocaleString('id-ID')}).`,
             data.message || `Tren pengeluaran pada ${top} saat ini relatif stabil.`,
           ]);
-        } catch (error) {
-          await buildFallbackInsights(expenseStats);
+        } catch {
+          buildFallbackInsights(expenseStats);
         }
       } else {
-        await buildFallbackInsights(expenseStats);
+        buildFallbackInsights(expenseStats);
       }
     }
     runAiAnalysis();

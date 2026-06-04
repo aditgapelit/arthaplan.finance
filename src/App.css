@@ -9,13 +9,6 @@ body {
   line-height: 1.3;
 }
 
-/* Penyesuaian Main Content */
-main {
-  margin-left: 240px; /* HARUS SAMA dengan width sidebar */
-  padding: 20px;
-  min-height: 100vh;
-}
-
 /* Reset heading agar sinkron dengan layout padat */
 h1, h2, h3 { margin: 0 0 16px 0; color: #0f172a; letter-spacing: -0.015em; font-weight: 700; }
 h1 { font-size: 1.4rem; }
