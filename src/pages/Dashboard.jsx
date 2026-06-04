@@ -9,7 +9,7 @@ import PageHeader from '../components/PageHeader';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import styles from './Dashboard.module.css';
 
-const AI_API_BASE_URL = import.meta.env.VITE_AI_API_URL || 'http://localhost:8000';
+const AI_API_BASE_URL = import.meta.env.VITE_AI_API_URL || '/.netlify/functions';
 
 export default function Dashboard() {
   const { user } = useAuth();

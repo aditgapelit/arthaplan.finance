@@ -7,7 +7,7 @@ import PageHeader from '../components/PageHeader';
 import styles from './ArthaTrack.module.css';
 import AddTransactionModal from '../components/AddTransactionModal';
 
-const AI_API_BASE_URL = import.meta.env.VITE_AI_API_URL || 'http://localhost:8000';
+const AI_API_BASE_URL = import.meta.env.VITE_AI_API_URL || '/.netlify/functions';
 
 export default function ArthaTrack() {
   const { user } = useAuth();
